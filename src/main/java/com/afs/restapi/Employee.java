@@ -59,6 +59,7 @@ public class Employee {
     }
 
     public void merge(Employee employee) {
+        this.age = employee.age;
         this.salary = employee.salary;
     }
 }
