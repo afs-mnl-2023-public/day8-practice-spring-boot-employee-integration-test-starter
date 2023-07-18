@@ -12,21 +12,21 @@ public class EmployeeRepository {
     private List<Employee> employees = new ArrayList<>();
 
     public EmployeeRepository() {
-        this.employees.add(new Employee(1, "Lily1", 20, "Female", 8000));
-        this.employees.add(new Employee(2, "Lily2", 20, "Female", 8000));
-        this.employees.add(new Employee(3, "Lily3", 20, "Female", 8000));
-        this.employees.add(new Employee(4, "Lily4", 20, "Female", 8000));
-        this.employees.add(new Employee(5, "Lily5", 20, "Female", 8000));
-        this.employees.add(new Employee(6, "Lily6", 20, "Female", 8000));
+        this.employees.add(new Employee(1L, "Lily1", 20, "Female", 8000));
+        this.employees.add(new Employee(2L, "Lily2", 20, "Female", 8000));
+        this.employees.add(new Employee(3L, "Lily3", 20, "Female", 8000));
+        this.employees.add(new Employee(4L, "Lily4", 20, "Female", 8000));
+        this.employees.add(new Employee(5L, "Lily5", 20, "Female", 8000));
+        this.employees.add(new Employee(6L, "Lily6", 20, "Female", 8000));
     }
 
     public List<Employee> findAll() {
         return employees;
     }
 
-    public Employee findById(int id) {
+    public Employee findById(Long id) {
         return employees.stream()
-                .filter(employee -> employee.getId() == id)
+                .filter(employee -> employee.getId().equals(id))
                 .findFirst()
                 .orElseThrow(NotFoundException::new);
     }
@@ -37,10 +37,10 @@ public class EmployeeRepository {
                 .collect(Collectors.toList());
     }
 
-    public List<Employee> findByPage(int pageNumber, int pageSize) {
+    public List<Employee> findByPage(Integer page, Integer size) {
         return employees.stream()
-                .skip((long) pageNumber * pageSize)
-                .limit(pageSize)
+                .skip((long) (page - 1) * size)
+                .limit(size)
                 .collect(Collectors.toList());
     }
 
@@ -50,21 +50,20 @@ public class EmployeeRepository {
         return newEmployee;
     }
 
-    private int generateNewId() {
-        int maxId = employees.stream()
-                .mapToInt(Employee::getId)
+    private Long generateNewId() {
+        return employees.stream()
+                .mapToLong(Employee::getId)
                 .max()
-                .orElse(0);
-        return maxId + 1;
+                .orElse(0L) + 1;
     }
 
-    public Employee update(int id, Employee employee) {
+    public Employee update(Long id, Employee employee) {
         Employee employeeToUpdate = findById(id);
         employeeToUpdate.merge(employee);
         return employeeToUpdate;
     }
 
-    public void delete(int id) {
+    public void delete(Long id) {
         Employee toRemovedEmployee = findById(id);
         employees.remove(toRemovedEmployee);
     }
