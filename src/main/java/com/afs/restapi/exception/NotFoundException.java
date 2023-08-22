@@ -1,4 +1,4 @@
-package com.afs.restapi;
+package com.afs.restapi.exception;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException() {

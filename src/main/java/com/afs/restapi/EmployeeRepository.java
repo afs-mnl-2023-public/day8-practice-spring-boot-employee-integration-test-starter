@@ -1,5 +1,6 @@
 package com.afs.restapi;
 
+import com.afs.restapi.exception.NotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -9,15 +10,14 @@ import java.util.stream.Collectors;
 @Repository
 public class EmployeeRepository {
 
-    private List<Employee> employees = new ArrayList<>();
+    private final List<Employee> employees = new ArrayList<>();
 
     public EmployeeRepository() {
-        this.employees.add(new Employee(1L, "Lily1", 20, "Female", 8000));
-        this.employees.add(new Employee(2L, "Lily2", 20, "Female", 8000));
-        this.employees.add(new Employee(3L, "Lily3", 20, "Female", 8000));
-        this.employees.add(new Employee(4L, "Lily4", 20, "Female", 8000));
-        this.employees.add(new Employee(5L, "Lily5", 20, "Female", 8000));
-        this.employees.add(new Employee(6L, "Lily6", 20, "Female", 8000));
+        employees.add(new Employee(1L, "John Smith", 32, "Male", 5000));
+        employees.add(new Employee(2L, "Jane Johnson", 28, "Female", 6000));
+        employees.add(new Employee(3L, "David Williams", 35,"Male", 5500));
+        employees.add(new Employee(4L, "Emily Brown", 23, "Female", 4500));
+        employees.add(new Employee(5L, "Michael Jones", 40, "Male", 7000));
     }
 
     public List<Employee> findAll() {
@@ -37,10 +37,10 @@ public class EmployeeRepository {
                 .collect(Collectors.toList());
     }
 
-    public List<Employee> findByPage(Integer page, Integer size) {
+    public List<Employee> findByPage(Integer pageNumber, Integer pageSize) {
         return employees.stream()
-                .skip((long) (page - 1) * size)
-                .limit(size)
+                .skip((long) (pageNumber - 1) * pageSize)
+                .limit(pageSize)
                 .collect(Collectors.toList());
     }
 
@@ -48,13 +48,6 @@ public class EmployeeRepository {
         newEmployee.setId(generateNewId());
         employees.add(newEmployee);
         return newEmployee;
-    }
-
-    private Long generateNewId() {
-        return employees.stream()
-                .mapToLong(Employee::getId)
-                .max()
-                .orElse(0L) + 1;
     }
 
     public Employee update(Long id, Employee employee) {
@@ -66,6 +59,13 @@ public class EmployeeRepository {
     public void delete(Long id) {
         Employee toRemovedEmployee = findById(id);
         employees.remove(toRemovedEmployee);
+    }
+
+    private Long generateNewId() {
+        return employees.stream()
+                .mapToLong(Employee::getId)
+                .max()
+                .orElse(0L) + 1;
     }
 }
 

@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("employees")
 public class EmployeeController {
 
-    private EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
     public EmployeeController(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
@@ -39,9 +39,9 @@ public class EmployeeController {
         return employeeRepository.findByGender(gender);
     }
 
-    @GetMapping(params = {"page", "size"})
-    public List<Employee> findByPage(Integer page, Integer size) {
-        return employeeRepository.findByPage(page, size);
+    @GetMapping(params = {"pageNumber", "pageSize"})
+    public List<Employee> findByPage(Integer pageNumber, Integer pageSize) {
+        return employeeRepository.findByPage(pageNumber, pageSize);
     }
 
     @PostMapping
